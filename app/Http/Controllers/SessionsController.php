@@ -12,7 +12,7 @@ class SessionsController extends Controller
         return view('sessions.create');
     }
 
-    //登陆提交
+    //登陆提交，保存会话
     public function store(Request $request){
         $credentials = $this->validate($request,[
             'email' =>'required|email|max:255',
@@ -28,7 +28,13 @@ class SessionsController extends Controller
             session()->flash('danger','很抱歉，您的邮箱和密码不匹配');
             return redirect()->back()->withInput();
         }
-
-        return;
     }
+
+    //退出登陆，也就是删除会话
+    public function destroy(){
+        Auth::logout();
+        session()->flash('success','您已经成功退出');
+        return redirect('login');
+    }
+
 }
