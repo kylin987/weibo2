@@ -4,9 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Auth;
 
 class UsersController extends Controller
 {
+
+    public function __construct(){
+        //除了下面3个动作，其他动作都需要登录才能访问
+        $this->middleware('auth', [
+            'except' =>['show','create','store']
+        ]);
+
+        //这句的意思，应该是，注册页面只能未登录用户访问，而不是未登录用户只能访问注册页面
+        $this->middleware('guest',[
+            'only' =>['create']
+        ]);
+    }
 
     //显示用户注册页面
     public function create(){
@@ -42,11 +55,14 @@ class UsersController extends Controller
 
     //展示用户资料修改的页面
     public function edit(User $user){
+        $this->authorize('update', $user);
         return view('users.edit',compact('user'));
     }
 
     //提交保存用户修改的内容
     public function update(User $user,Request $request){
+        $this->authorize('update', $user);
+
         $this->validate($request,[
             'name' => 'required|max:50',
             'password' => 'nullable|confirmed|min:6'
