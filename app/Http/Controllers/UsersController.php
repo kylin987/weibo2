@@ -12,7 +12,7 @@ class UsersController extends Controller
     public function __construct(){
         //除了下面3个动作，其他动作都需要登录才能访问
         $this->middleware('auth', [
-            'except' =>['show','create','store']
+            'except' =>['show','create','store','index']
         ]);
 
         //这句的意思，应该是，注册页面只能未登录用户访问，而不是未登录用户只能访问注册页面
@@ -79,5 +79,11 @@ class UsersController extends Controller
         session()->flash('success','用户资料修改成功');
 
         return redirect()->route('users.show', $user);
+    }
+
+    //列出所有的用户
+    public function index(){
+        $users = User::paginate(10);
+        return view('users.index',compact('users'));
     }
 }
