@@ -29,7 +29,10 @@ class UsersController extends Controller
 
     //显示用户信息页面
     public function show(User $user){
-        return view('users.show',compact('user'));
+        $weibos = $user->weibos()
+                           ->orderBy('created_at', 'desc')
+                           ->paginate(10);
+        return view('users.show',compact('user','weibos'));
     }
 
 
