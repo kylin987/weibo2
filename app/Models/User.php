@@ -52,8 +52,12 @@ class User extends Authenticatable
         $hash = md5(strtolower(trim($this->attributes['email'])));
         return "http://www.gravatar.com/avatar/$hash?s=$size";
     }
-
+    //与微博绑定一对多的关系
     public function weibos(){
         return $this->hasMany(Weibo::class);
+    }
+
+    public function feed(){
+        return $this->weibos()->orderBy('created_at','desc');
     }
 }
