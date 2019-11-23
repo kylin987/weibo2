@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(UsersTableSeeder::class);
         $this->call(WeibosTableSeeder::class);
+        $this->call(FollowersTableSeeder::class);
 
         Model::reguard();
     }

@@ -66,7 +66,7 @@ class User extends Authenticatable
     }
     //获取用户关注的人的列表（多对多关系）
     public function followings(){
-        return $this->belongsTomany(User::class,'followings','follower_id','user_id');
+        return $this->belongsTomany(User::class,'followers','follower_id','user_id');
     }
     //关注操作，$user_ids 为要去关注的人
     public function follow($user_ids){
