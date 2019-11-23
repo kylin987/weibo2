@@ -60,4 +60,31 @@ class User extends Authenticatable
     public function feed(){
         return $this->weibos()->orderBy('created_at','desc');
     }
+    //获取粉丝关系列表（多对多关系）
+    public function followers(){
+        return $this->belongsTomany(User::class,'followers','user_id','follower_id');
+    }
+    //获取用户关注的人的列表（多对多关系）
+    public function followings(){
+        return $this->belongsTomany(User::class,'followings','follower_id','user_id');
+    }
+    //关注操作，$user_ids 为要去关注的人
+    public function follow($user_ids){
+        if(!is_array($user_ids)){
+            $user_ids = compact('user_ids');
+        }
+        $this->followings()->sync($user_ids,false);
+    }
+
+    //取消关注操作，$user_ids 为要去取消关注的人
+    public function unfollow($user_ids){
+        if(!is_array($user_ids)){
+            $user_ids = compact('user_ids');
+        }
+        $this->followings()->detach($user_ids);
+    }
+
+    public function isFollowing($user_id){
+        return $this->followings->contains($user_id);
+    }
 }
